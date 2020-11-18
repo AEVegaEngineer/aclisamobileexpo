@@ -28,9 +28,9 @@
     android:allowBackup="false"
     android:theme="@style/AppTheme"
   >
-    <meta-data android:name="expo.modules.updates.EXPO_UPDATE_URL" android:value="https://exp.host/@alexissa41/Sanatorio_Digital" />
+    <meta-data android:name="expo.modules.updates.EXPO_UPDATE_URL" android:value="https://exp.host/@sulfur0/aclisa_mobile" />
     <meta-data android:name="expo.modules.updates.EXPO_SDK_VERSION" android:value="38.0.0" />
-    <meta-data android:name="expo.modules.updates.EXPO_RELEASE_CHANNEL" android:value="desarrollo" />
+    <meta-data android:name="expo.modules.updates.EXPO_RELEASE_CHANNEL" android:value="default" />
       <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyAXPe00G2I6mAhBGIF0rHiX2bR8jSEVS3c"/>
   <activity
     android:name=".MainActivity"

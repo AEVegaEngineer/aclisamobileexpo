@@ -91,8 +91,9 @@ export default function App({ navigation }) {
     registerForPushNotificationsAsync().then((token) =>
       {
         setExpoPushToken(token)
-        SecureStore.setItemAsync("ExpoToken", token);
-        console.log("el token es: " + token);
+        const expoT = (token == '' || typeof token === 'undefined' || token === null) ? "simulador" : token;
+        SecureStore.setItemAsync("ExpoToken", expoT);
+        console.log("el token es: " + expoT);
       }
     );
 
@@ -167,19 +168,24 @@ export default function App({ navigation }) {
     }    
   } 
   const authDevice = async( tipo, token ) => { 
-    const t = await SecureStore.getItemAsync("ExpoToken");
     
-    const expoToken = (t == '') ? "simulador" : t;//(!t === undefined && t != "") ? t : "simulador";
-    const endpoint = (tipo == "insert") ? "insert/mine" : "delete/mine/"+t;
-    const authDeviceURL = "http://66.97.39.24:8044/mensajes/device/"+endpoint;
-    const deviceOS = (Platform.OS === "android") ? "android" : "iOS";
-    const Datos = { "deviceId" : expoToken, "deviceName" : deviceOS };
-    //console.log(authDeviceURL);
-    //console.log("Authorization: "+token);
-    //console.log(Datos);
+    const expoToken = await SecureStore.getItemAsync("ExpoToken"); //(!t === undefined && t != "") ? t : "simulador";
+
     if(expoToken != "simulador") {
+
+      const endpoint = (tipo == "insert") ? "insert/mine" : "delete/my";
+      const authDeviceURL = "http://66.97.39.24:8044/mensajes/device/"+endpoint;
+      const deviceOS = (Platform.OS === "android") ? "android" : "iOS";
+      const Datos = { "deviceId" : expoToken };
+      if(tipo == "insert")
+        Datos["deviceName"] = deviceOS;
+      const metodo = (tipo == "insert") ? "POST" : "DELETE";
+      console.log(authDeviceURL);
+      console.log("Authorization: "+token);
+      console.log(Datos);
+    
       await fetch(authDeviceURL, {
-        method: "POST",
+        method: metodo,
         headers: {
           "Authorization": token,
           Accept: "application/json",
@@ -187,7 +193,8 @@ export default function App({ navigation }) {
         },
         body: JSON.stringify(Datos),
         
-      }).then((response) => {
+      }).then(async(response) => {
+        console.log(await response.json());
         if(!response.ok) {      
           const errMsg = (tipo == "insert") 
             ? "No se ha podido registrar el dispositivo, no se recibirán notificaciones. Debe volver a iniciar sesión." 
@@ -198,7 +205,7 @@ export default function App({ navigation }) {
           console.log(successMsg);
         } 
       }).catch((error) => {
-        //console.log(error)
+        console.log(error)
         LoginAlert(error);
       })
     }   
@@ -296,9 +303,9 @@ export default function App({ navigation }) {
       signOut: async() =>
         {
           const token = await SecureStore.getItemAsync("token");
-          authDevice("delete",token);
           dispatch(
             { type: "SIGN_OUT" },
+            authDevice("delete",token),
             SecureStore.deleteItemAsync("token"),          
           )
         }

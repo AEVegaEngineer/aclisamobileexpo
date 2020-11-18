@@ -1,10 +1,10 @@
 {
-  "name": "Aclisa mobile",
-  "displayName": "Aclisa mobile",
+  "name": "Aclisa Mobile",
+  "displayName": "Aclisa Mobile",
   "expo": {
     "icon":"./assets/icon.png",
     "orientation" : "portrait",
-    "name": "aclisa mobile",
+    "name": "Aclisa Mobile",
     "slug": "aclisa_mobile",
     "scheme": "mycoolredirect",
     "privacy":"unlisted",
@@ -16,26 +16,13 @@
     "version": "1.0.0",
     "ios": {
       "requireFullScreen": true,
-      "bundleIdentifier": "com.colegio.horus",
-      "buildNumber": "1.0.0",
-      "config": {
-        "googleSignIn": {
-          "reservedClientId": "com.googleusercontent.apps.921371634398-ilqtn64r594h2ugh8mq9u9djfcs5q376"
-        }
+      "bundleIdentifier": "com.aclisa.AclisaMobile",
+      "buildNumber": "1.0.0"      
     }
-  }
     ,
     "android": {
       "package": "com.colegio.horus",
-      "useNextNotificationsApi": true,
-      "config": {
-        "googleSignIn":{
-          "apiKey":"921371634398-s07cp16tek0cpgc9ngfo2eskitpmhnr3.apps.googleusercontent.com",
-          "certificateHash":"89A9F9B77A777C21D2BE5AA460899849196C305B"
-        },
-        "googleMaps": {
-          "apiKey": "AIzaSyCvex1JEp7vrDkf4lSQfiAJ3PBSbHTp-VE"
-        }},
+      "useNextNotificationsApi": true,      
       "versionCode": 1
     },
     "updates":{
