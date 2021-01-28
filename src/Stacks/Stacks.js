@@ -3,10 +3,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 import {Image} from 'react-native'
 import ForgotPassword from "../Screen/SinLog/ForgotPassword/index";
 import Land from "../Screen/SinLog/Landing/Landing";
-import ListaNotificaciones from "../Screen/notificaciones/ListaNotificaciones";
 import ListaNotificaciones2 from "../Screen/notificaciones/ListaNotificaciones2";
 import DetalleNotificacion from "../Screen/notificaciones/DetalleNotificacion";
-import NotificacionesKitten from "../Screen/Socio/Notificaciones"
 import Login from "../Screen/SinLog/Login/Login";
 import SplashInicio from "../Screen/Global/Splash";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -44,7 +42,7 @@ export const SinLogin = ({ navigation }) => {
 
 export const StackEmpleado = ({ navigation }) => (
   <Stack.Navigator
-    initialRouteName="ListaNotificaciones"
+    initialRouteName="ListaNotificaciones2"
     screenOptions={{ headerShown: true }}
   >
      <Stack.Screen
@@ -54,22 +52,18 @@ export const StackEmpleado = ({ navigation }) => (
         headerTitle:"",
          headerTransparent: true,
          animationEnabled: false,
-      }}
-      
-      
+      }}     
       />
-     <Stack.Screen
-      name="ListaNotificaciones"
-      component={ListaNotificaciones}
+      <Stack.Screen
+      name="ListaNotificaciones2"
+      component={ListaNotificaciones2}
       options={{
-        
-         headerLeft: () => (
+        headerLeft: () => (
           <LogoTitle navigation={navigation}/>
-         ),
-          headerTitle:"Notificaciones"
-        }}
-      />
-      
+        ),
+        headerTitle:"Notificaciones"
+      }}
+    />
       <Stack.Screen
         name="DetalleNotificacion"
       component={DetalleNotificacion}
@@ -94,19 +88,8 @@ export const StackSocio = ({ navigation }) => (
         headerTitle:"",
         headerTransparent: true,
         animationEnabled: false,
-      }}
-    
-    />
-    <Stack.Screen
-      name="ListaNotificaciones"
-      component={ListaNotificaciones}
-      options={{
-        headerLeft: () => (
-          <LogoTitle navigation={navigation}/>
-        ),
-        headerTitle:"Notificaciones"
-      }}
-    />
+      }}    
+    />    
     <Stack.Screen
       name="ListaNotificaciones2"
       component={ListaNotificaciones2}

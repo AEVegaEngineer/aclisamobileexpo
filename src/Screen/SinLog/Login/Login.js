@@ -1,5 +1,4 @@
-import { stylesGral } from "../../../../Asset/estilos/stylesGral";
-import { View, StyleSheet, AsyncStorage } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { AuthContext } from "../../../../Component/context";
 import * as React from "react";
 
@@ -38,7 +37,7 @@ export default function Login(props) {
             Bienvenido a 
           </Text>
           <Text category="h1" status="control">
-            Aclisa Mobile
+            Aclisa
           </Text>
           <Text style={styles.signInLabel} category="s1" status="control">
             Ingresa con tu cuenta de Aclisa
@@ -52,6 +51,7 @@ export default function Login(props) {
             value={email}
             onChangeText={setEmail}
           />
+          
           <Input
             style={styles.passwordInput}
             status="control"
@@ -116,6 +116,7 @@ const styles = StyleSheet.create({
   signInButton: {
     marginHorizontal: 16,
     marginBottom:30,
+    backgroundColor:"#00acc1"
   },
   forgotPasswordContainer: {
     flexDirection: "row",

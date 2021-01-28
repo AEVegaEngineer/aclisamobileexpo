@@ -1,36 +1,33 @@
 {
-  "name": "Aclisa Mobile",
-  "displayName": "Aclisa Mobile",
+  "name": "Aclisa",
+  "displayName": "Aclisa",
   "expo": {
-    "icon":"./assets/icon.png",
-    "orientation" : "portrait",
-    "name": "Aclisa Mobile",
-    "slug": "aclisa_mobile",
+    "icon": "./assets/icon.png",
+    "orientation": "portrait",
+    "name": "Aclisa",
+    "slug": "aclisa",
     "scheme": "mycoolredirect",
-    "privacy":"unlisted",
+    "privacy": "unlisted",
     "splash": {
       "image": "./assets/iphoneSplash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "version": "1.0.0",
+    "version": "1.0.1",
     "ios": {
       "requireFullScreen": true,
-      "bundleIdentifier": "com.aclisa.AclisaMobile",
-      "buildNumber": "1.0.0"      
-    }
-    ,
+      "bundleIdentifier": "com.aclisa.Aclisa",
+      "buildNumber": "1.0.1"
+    },
     "android": {
-      "package": "com.colegio.horus",
-      "useNextNotificationsApi": true,      
-      "versionCode": 1
+      "package": "com.aclisa.Aclisa",
+      "useNextNotificationsApi": true,
+      "versionCode": 2
     },
-    "updates":{
-      "enabled":true,
-      "checkAutomatically":"ON_LOAD"
+    "updates": {
+      "enabled": true,
+      "checkAutomatically": "ON_LOAD"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ]
+    "assetBundlePatterns": ["assets/*"]
   }
 }

@@ -54,7 +54,7 @@ export function DrawcontentSocio(props) {
                                 />
                             )}
                             label="Lista de Notificaciones"
-                            onPress={() => { props.navigation.navigate('ListaNotificaciones') }}
+                            onPress={() => { props.navigation.navigate('ListaNotificaciones2') }}
                         />
                         {/*                         
                         <DrawerItem

@@ -3,16 +3,14 @@ import {
   Image,
   StyleSheet,
   View,
-  FlatList,
-  TouchableHighlight,
-  AsyncStorage
+  AsyncStorage,
+  ScrollView 
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import * as WebBrowser from 'expo-web-browser';
 import * as SecureStore from "expo-secure-store";
 import {
   Card,
-  Button,
   Text,
 } from "@ui-kitten/components";
 import moment from "moment";
@@ -24,8 +22,6 @@ moment.locale('es', {
   weekdaysMin: 'Do_Lu_Ma_Mi_Ju_Vi_Sa'.split('_')
 }
 );
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faSync } from '@fortawesome/free-solid-svg-icons'
 
 //trucos para el lenguaje de moment
 moment.locale(['es', 'es'])
@@ -61,11 +57,13 @@ const DetalleNotificacion = ({ navigation }) => {
     })
     .then((response) => { return response.json() })
     .then((responseData) => { // responseData = undefined 
+      /*
       if(responseData.Respuesta.resultado === true) {
         console.log("cambia notificacion "+id+" al estado "+estado);
       } else {
         console.log("Error, no se ha podido cambiar de estado");
       }
+      */
     })
     .catch(function(err) {
         console.log(err);
@@ -102,6 +100,7 @@ const DetalleNotificacion = ({ navigation }) => {
   
   return (
     <View style={styles.listWrapper}>
+      <ScrollView style={styles.scrollView}>
       <View style={styles.cardWrapper}>
         <Card
           header={(props) => (
@@ -126,6 +125,7 @@ const DetalleNotificacion = ({ navigation }) => {
 
         </Card>
       </View>
+      </ScrollView>
     </View>
   );
   
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     height: 150,
   },
   footerContainer:{
-
+    
   },
   footerButtonContainer: {
     flexDirection: "row",
@@ -195,6 +195,10 @@ const styles = StyleSheet.create({
   },
   listWrapper: {
     marginTop: 10,
+    flex: 1
+  },
+  scrollView: {
+    
   },
   detalleText:{
     fontSize: 20

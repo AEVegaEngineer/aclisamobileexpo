@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import {StackEmpleado,StackSocio,SinLogin} from "./src/Stacks/Stacks";
 import { DrawcontentEmpleado } from "./src/Screen/Empleado/DrowerContentEmpleado/Drower";
 import { DrawcontentSocio } from "./src/Screen/Socio/DrowerContentSocio/Drower";
 import { Alert } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import {
   AsyncStorage,
   ActivityIndicator,
@@ -21,7 +21,7 @@ import * as Notifications from "expo-notifications";
 import * as Permissions from "expo-permissions";
 import * as SecureStore from "expo-secure-store";
 import * as eva from "@eva-design/eva";
-import { ApplicationProvider, Layout, Text } from "@ui-kitten/components";
+import { ApplicationProvider } from "@ui-kitten/components";
 import { ImageOverlay } from "./src/Screen/Global/extra/image-overlay.component";
 
 Notifications.setNotificationHandler({
@@ -93,7 +93,7 @@ export default function App({ navigation }) {
         setExpoPushToken(token)
         const expoT = (token == '' || typeof token === 'undefined' || token === null) ? "simulador" : token;
         SecureStore.setItemAsync("ExpoToken", expoT);
-        console.log("el token es: " + expoT);
+        //console.log("el token es: " + expoT);
       }
     );
 
@@ -107,8 +107,8 @@ export default function App({ navigation }) {
     // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
     responseListener.current = Notifications.addNotificationResponseReceivedListener(
       (response) => {
-        console.log("Notificación recibida");
-        console.log(response);
+        //console.log("Notificación recibida");
+        //console.log(response);
       }
     );
     return () => {
@@ -180,9 +180,9 @@ export default function App({ navigation }) {
       if(tipo == "insert")
         Datos["deviceName"] = deviceOS;
       const metodo = (tipo == "insert") ? "POST" : "DELETE";
-      console.log(authDeviceURL);
-      console.log("Authorization: "+token);
-      console.log(Datos);
+      //console.log(authDeviceURL);
+      //console.log("Authorization: "+token);
+      //console.log(Datos);
     
       await fetch(authDeviceURL, {
         method: metodo,
@@ -194,16 +194,16 @@ export default function App({ navigation }) {
         body: JSON.stringify(Datos),
         
       }).then(async(response) => {
-        console.log(await response.json());
+        //console.log(await response.json());
         if(!response.ok) {      
           const errMsg = (tipo == "insert") 
             ? "No se ha podido registrar el dispositivo, no se recibirán notificaciones. Debe volver a iniciar sesión." 
             : "No se ha podido desvincular el dispositivo, seguirá recibiendo notificaciones.";
           throw errMsg;
-        } else {
+        } /*else {
           const successMsg = (tipo == "insert") ? "Se registró el dispositivo correctamente" : "Se eliminó el dispositivo correctamente";
           console.log(successMsg);
-        } 
+        } */
       }).catch((error) => {
         console.log(error)
         LoginAlert(error);

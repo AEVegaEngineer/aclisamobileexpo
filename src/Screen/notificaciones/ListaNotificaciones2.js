@@ -4,16 +4,12 @@ import {
   StyleSheet,
   View,
   FlatList,
-  TouchableHighlight,
   AsyncStorage
 } from "react-native";
 import {
   Card,
-  Button,
   Text,
 } from "@ui-kitten/components";
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faSync } from '@fortawesome/free-solid-svg-icons'
 import * as SecureStore from "expo-secure-store";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
@@ -30,24 +26,9 @@ function testJSON(text) {
 }
 const ListaNotificaciones = ({ navigation }) => {
 
-
-  const [FullNotifs, SetFullNotifs] = React.useState([]);
-  const [Notifs, SetNotifs] = React.useState([]);
-  const [TipoNotificacion, SetTipoNotificacion] = React.useState("no leidas");
-  const [AuthMensaje, SetAuthMensaje] = React.useState("");
-  const [AuthToken, SetAuthToken] = React.useState("");
-  const [AuthRol, SetAuthRol] = React.useState("");
-  /*
-  const didMountRef = React.useRef(false);
-  React.useEffect(() => {
-    if (didMountRef.current) {
-      window.onpopstate = e => {
-        console.log("se actualiza la pagina");
-      }
-      
-    } else didMountRef.current = true
-  });
-  */
+  const [NotifsLeidas, SetNotifsLeidas] = React.useState([]);
+  const [NotifsNoLeidas, SetNotifsNoLeidas] = React.useState([]);
+  
 
   React.useEffect(() => {  
     const unsubscribe = navigation.addListener('focus', () => {
@@ -85,7 +66,7 @@ const ListaNotificaciones = ({ navigation }) => {
     const token = await SecureStore.getItemAsync("token");
     //console.log(token);
     var getNotificacionesEndpoint = "http://66.97.39.24:8044/mensajes/msjCuerpo/getAllByUserDestino";
-    console.log("getNotificaciones")
+    //console.log("getNotificaciones")
     fetch(getNotificacionesEndpoint, {
       method: "GET",
       headers: {
@@ -109,27 +90,37 @@ const ListaNotificaciones = ({ navigation }) => {
       });
       const notifsOrdenadas = noleidos.concat(leidos);
       //console.log(notifsOrdenadas);
-      SetNotifs(notifsOrdenadas);
-
+      SetNotifsLeidas(leidos);
+      SetNotifsNoLeidas(noleidos);
     })
     .catch(function(err) {
         console.log(err);
     })
   }
+  /*
   const verNotifs = () => {
     console.log(Notifs)
   }
+  */
   const mostrarDetalle = async (idcuerpo) => {   
-    const notifSeleccionada = Notifs.filter((notif) => {
+    const notifSeleccionadaLeida = NotifsLeidas.filter((notif) => {
       return notif.id == idcuerpo;
     });
-    //console.log(notifSeleccionada)
-    await AsyncStorage.setItem('NotifSeleccionada',JSON.stringify(notifSeleccionada))
+    const notifSeleccionadaNoLeida = NotifsNoLeidas.filter((notif) => {
+      return notif.id == idcuerpo;
+    });
+    //console.log((notifSeleccionadaLeida.length !== 0 ) ? notifSeleccionadaLeida : notifSeleccionadaNoLeida)
+    
+    await AsyncStorage.setItem('NotifSeleccionada',JSON.stringify(
+      (notifSeleccionadaLeida.length !== 0 ) ? notifSeleccionadaLeida : notifSeleccionadaNoLeida
+      ));
     navigation.navigate("DetalleNotificacion");
+    
   }
   return (    
     <View style={styles.listWrapper}>
       {/* <CardMenuSuperior></CardMenuSuperior> */}
+      <Text style={{color:"black",fontSize:18, paddingBottom:10, textAlign:"center"}}>No Leídas</Text>
       <FlatList
         ItemSeparatorComponent={
           Platform.OS !== "android" &&
@@ -137,7 +128,8 @@ const ListaNotificaciones = ({ navigation }) => {
             <View style={[styles.separator, highlighted && { marginLeft: 0 }]} />
           ))
         }
-        data={Notifs}
+        style={{height:"45%"}}
+        data={NotifsNoLeidas}
         renderItem={({ item, index, separators }) => (
           <View style={styles.cardWrapper}>
             {/* <TouchableHighlight
@@ -158,7 +150,53 @@ const ListaNotificaciones = ({ navigation }) => {
               header={(props) => (
                 <CardCustomHeader
                   {...props}
-                  titulo={item.asunto.substring(0,30)+"..."}
+                  titulo={item.fechaUltimoEnvio.substring(0,10)+" "+item.asunto.substring(0,17)+"..."}
+                  img=""
+                  estado={item.estado}
+                  /*img={item.img}*/
+                />
+              )}
+            >
+              <CardBody text={item.mensaje.substring(0,35)+"..."}></CardBody>
+            </Card>
+            {/* </TouchableHighlight> */}
+          </View>
+        )}
+        
+        keyExtractor={(item, index) => item.id.toString()}
+        
+      />
+      <Text style={{color:"black",fontSize:18, marginVertical:10, textAlign:"center"}}>Leídas</Text>
+      <FlatList
+        ItemSeparatorComponent={
+          Platform.OS !== "android" &&
+          (({ highlighted }) => (
+            <View style={[styles.separator, highlighted && { marginLeft: 0 }]} />
+          ))
+        }
+        style={{height:"45%"}}
+        data={NotifsLeidas}        
+        renderItem={({ item, index, separators }) => (
+          <View style={styles.cardWrapper}>
+            {/* <TouchableHighlight
+              key={item.idCuerpo}
+              onPress={() => {
+                console.log(item.idCuerpo);
+              }}
+              onShowUnderlay={separators.highlight}
+              onHideUnderlay={separators.unhighlight}
+            > */}
+            <Card
+              key={item.id}
+              onPress={(props) => {
+                //console.log(item.id);
+                mostrarDetalle(item.id)
+              }}
+              style={styles.card}
+              header={(props) => (
+                <CardCustomHeader
+                  {...props}
+                  titulo={item.fechaUltimoEnvio.substring(0,10)+" "+item.asunto.substring(0,17)+"..."}
                   img=""
                   estado={item.estado}
                   /*img={item.img}*/
@@ -257,6 +295,7 @@ const styles = StyleSheet.create({
   },
   listWrapper: {
     marginTop: 20,
+    marginBottom: 20,
   },
 });
 
