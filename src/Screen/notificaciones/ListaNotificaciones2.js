@@ -4,7 +4,8 @@ import {
   StyleSheet,
   View,
   FlatList,
-  AsyncStorage
+  AsyncStorage,
+  AppState
 } from "react-native";
 import {
   Card,
@@ -28,40 +29,43 @@ const ListaNotificaciones = ({ navigation }) => {
 
   const [NotifsLeidas, SetNotifsLeidas] = React.useState([]);
   const [NotifsNoLeidas, SetNotifsNoLeidas] = React.useState([]);
+  const [updateVal, setUpdateVal] = React.useState(false);
+  const forceUpdate = newState => {    
+    if (newState === 'active'){
+      setUpdateVal(!updateVal); // forces a rerender
+      //console.log("Actualizacion del estado, la pantalla paso de background a foreground.");
+      getNotificaciones();
+    }      
+  }  
+  React.useEffect(() => {
+    AppState.addEventListener('change', forceUpdate);
+    return () => AppState.removeEventListener('change', forceUpdate);
+  }, []);  
   
-
   React.useEffect(() => {  
     const unsubscribe = navigation.addListener('focus', () => {
-      // La pantalla de notificaciones está focuseada
+      //console.log("Luego del login, la pantalla de notificaciones está focuseada.");
       getNotificaciones();
     });
     // Retorna la función para desuscribirla del evento para que sea removida una vez se desmonte
     return unsubscribe;
   }, [navigation]);
-
+  
+  
+  
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <TouchableOpacity style={{backgroundColor:'transparent', padding:0}} onPress={() => getNotificaciones()}>
           <Image
           style={{padding:0, width: 40, height: 40, flex:0 }}
-          source={require("../../assets/images/sync-flat.png")}
+          source={require("../../../assets/images/sync-flat.png")}
           />          
         </TouchableOpacity>
       ),
     });
   }, [navigation]);
-  /*
-  const mostrarDetalle = async (idcuerpo) => {
-    var notifSeleccionada = {}
-    Notifs.forEach(notificacion => {
-      if(notificacion.id == idcuerpo)
-        notifSeleccionada = notificacion      
-    });
-    console.log(notifSeleccionada)
-    await AsyncStorage.setItem('NotifSeleccionada',JSON.stringify(notifSeleccionada))
-  }
-  */
+   
   const getNotificaciones = async() => {
     const token = await SecureStore.getItemAsync("token");
     //console.log(token);

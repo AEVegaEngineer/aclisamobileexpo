@@ -1,14 +1,10 @@
 import { View, StyleSheet } from "react-native";
 import { AuthContext } from "../../../../Component/context";
 import * as React from "react";
-
+import { Ionicons } from '@expo/vector-icons'; 
 import { ImageOverlay } from "../../Global/extra/image-overlay.component";
-import {
-  EyeIcon,
-  EyeOffIcon,
-  PersonIcon,
-} from "../../Global/extra/icons";
 import { Button, Input, Text } from "@ui-kitten/components";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 
 
@@ -35,7 +31,7 @@ export default function Login(props) {
         <View style={styles.headerContainer}>
           <Text category="h2" status="control">
             Bienvenido a 
-          </Text>
+          </Text>          
           <Text category="h1" status="control">
             Aclisa
           </Text>
@@ -47,7 +43,8 @@ export default function Login(props) {
           <Input
             status="control"
             placeholder="Email"
-            icon={PersonIcon}
+            //icon={()=>(<Ionicons name="ios-list" size={24} color={'white'} />)}
+            accessoryLeft={()=>(<Ionicons name="md-person" size={24} color={'white'} />)}
             value={email}
             onChangeText={setEmail}
           />
@@ -56,12 +53,28 @@ export default function Login(props) {
             style={styles.passwordInput}
             status="control"
             placeholder="Contraseña"
-            icon={passwordVisible ? EyeIcon : EyeOffIcon}
+            //icon={passwordVisible ? EyeIcon : EyeOffIcon}
+            accessoryLeft={()=>(<Ionicons name="md-lock" size={24} color={'white'} />)}
+            /*
+            accessoryRight={()=>(passwordVisible ?
+            <Ionicons name="md-eye-off" size={24} color={'white'} />
+            : <Ionicons name="md-eye" size={24} color={'white'} />)}
+            */
             value={password}
             secureTextEntry={!passwordVisible}
             onChangeText={setPassword}
             onIconPress={onPasswordIconPress}
+            
           />
+          <View>
+            <TouchableOpacity style={{backgroundColor:'transparent', padding:0}} onPress={() => onPasswordIconPress()}>                  
+              <Text style={{}} category="s1" status="control">
+              <Ionicons name="md-eye" size={24} color={'white'} /> Mostrar contraseña
+              </Text>                               
+            </TouchableOpacity>
+          </View>
+          
+          
           <View style={styles.forgotPasswordContainer}>
             <Button
               style={styles.forgotPasswordButton}

@@ -3,43 +3,63 @@ import { StyleSheet, View } from "react-native";
 import { Button, Input, Text, Spinner } from "@ui-kitten/components";
 import { ImageOverlay } from "../../Global/extra/image-overlay.component";
 import { EmailIcon } from "../../Global/extra/icons";
-import { KeyboardAvoidingView } from "../../Global/extra/3rd-party";
-import LottieView from "lottie-react-native";
+import { Alert } from "react-native";
 
 export default function ForgotPassword(props) {
     const [email, setEmail] = React.useState();
-    const [password, setPassword] = React.useState();
-    const [passwordVisible, setPasswordVisible] = React.useState(false);
-    const [getStatus, setStatus] = React.useState(false);
 
     React.useEffect(() => {}, []);
-    const onSignInButtonPress = () => {
-        navigation && props.navigation.goBack();
-    };
+    
+    const recuperarContrasena = async (email) => {
+        console.log('recuperando contrasena para el email '+email);
+        const recover = await enviarEmail(email);
+        const r = recover.Respuesta;
+        console.log(r);
+        let msg = '',title = '';
+        if(r.resultado == false){
+            msg =  r.msj+'. '+r.data.Exception;
+            title = 'Ha ocurrido un error';
+            RecoverAlert(msg, title, false);
+        } else {
+            msg =  r.msj;
+            title = '¡Información enviada!';
+            RecoverAlert(msg, title, true);
+        }
+        //props.navigation.goBack();
+    }
+    function RecoverAlert(msg, title, status) {
+        Alert.alert(
+          title,
+          msg,
+          status ? [{ text: "OK", onPress: () => {
+              console.log("Alerta cerrada");
+              props.navigation.goBack();
+            } }] : null,
+          { cancelable: true }
+        );
+      }
 
-    const onSignUpButtonPress = () => {
-        navigation && props.navigation.navigate("SignUp4");
-    };
-
-    const onForgotPasswordButtonPress = () => {
-        navigation && navigation.navigate("ForgotPassword");
-    };
-
-    const onPasswordIconPress = () => {
-        setPasswordVisible(!passwordVisible);
-    };
-
-    const LoadingScreen = () => (
-        <View style={styles.containerSpinner} level="1">
-            <Spinner size="giant" status="success" />
-        </View>
-    );
+    const enviarEmail = (email) => {
+        const recoveryEndpoint = "http://aclisasj.com.ar:8044/security/users/resetPassword";
+        const cuerpo = JSON.stringify({
+            'username':email
+          });
+        return fetch(recoveryEndpoint, {
+          method: "POST",
+          headers: new Headers({
+            "Content-Type": "application/json",
+          }),
+          body:cuerpo
+        })
+        .then((response) => { return response.json() })
+        .catch(function(err) { console.log(err) })
+    }
 
     return (
         
             <ImageOverlay
                 style={styles.container}
-                source={require("./assets/image-background.jpg")}
+                source={require("./../../../../assets/medic-bg.jpg")}
             >
                 <Text
                     style={styles.forgotPasswordLabel}
@@ -61,8 +81,12 @@ export default function ForgotPassword(props) {
                     />
                 </View>
 
-                <Button size="large" onPress={() => setStatus(true)}>
-                    Recuperar cuenta
+                <Button 
+                size="large" 
+                style={styles.recoverButton}
+                onPress={() => recuperarContrasena(email)}
+                >
+                    Recuperar contraseña
                 </Button>
             </ImageOverlay>
         // </KeyboardAvoidingView>
@@ -70,6 +94,11 @@ export default function ForgotPassword(props) {
 }
 
 const styles = StyleSheet.create({
+    recoverButton: {
+        marginHorizontal: 16,
+        marginBottom:30,
+        backgroundColor:"#00acc1"
+    },
     container: {
         flex: 1,
         paddingHorizontal: 16,

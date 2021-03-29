@@ -2,15 +2,14 @@ import React, { useState, useRef } from "react";
 import {StackEmpleado,StackSocio,SinLogin} from "./src/Stacks/Stacks";
 import { DrawcontentEmpleado } from "./src/Screen/Empleado/DrowerContentEmpleado/Drower";
 import { DrawcontentSocio } from "./src/Screen/Socio/DrowerContentSocio/Drower";
-import { Alert } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import {
+  Alert,
   AsyncStorage,
   ActivityIndicator,
   View,
-  Button,
-  Platform,
+  Platform
 } from "react-native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { AuthContext } from "./Component/context";
@@ -28,7 +27,7 @@ Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
     shouldPlaySound: true,
-    shouldSetBadge: false,
+    shouldSetBadge: true,
   }),
 });
 
@@ -38,7 +37,16 @@ function LoginAlert(msg) {
   Alert.alert(
     "Ha ocurrido un error!",
     msg,
-    [{ text: "OK", onPress: () => console.log("Alerta cerrada") }],
+    [{ text: "Cerrar", onPress: () => console.log("Alerta cerrada") }],
+    { cancelable: true }
+  );
+}
+
+function LoginInfo(title, msg) {
+  Alert.alert(
+    title,
+    msg,
+    [{ text: "Cerrar", onPress: () => console.log("LoginInfo cerrado") }],
     { cancelable: true }
   );
 }
@@ -90,10 +98,11 @@ export default function App({ navigation }) {
     // notificaciones
     registerForPushNotificationsAsync().then((token) =>
       {
-        setExpoPushToken(token)
+        setExpoPushToken(token);
+        //LoginInfo('token:',token)
         const expoT = (token == '' || typeof token === 'undefined' || token === null) ? "simulador" : token;
         SecureStore.setItemAsync("ExpoToken", expoT);
-        //console.log("el token es: " + expoT);
+        console.log("el token es: " + expoT);
       }
     );
 
@@ -170,7 +179,6 @@ export default function App({ navigation }) {
   const authDevice = async( tipo, token ) => { 
     
     const expoToken = await SecureStore.getItemAsync("ExpoToken"); //(!t === undefined && t != "") ? t : "simulador";
-
     if(expoToken != "simulador") {
 
       const endpoint = (tipo == "insert") ? "insert/mine" : "delete/my";
@@ -181,9 +189,9 @@ export default function App({ navigation }) {
         Datos["deviceName"] = deviceOS;
       const metodo = (tipo == "insert") ? "POST" : "DELETE";
       //console.log(authDeviceURL);
-      //console.log("Authorization: "+token);
-      //console.log(Datos);
-    
+      //console.log("Authorization: "+token);      
+      //console.log({'deviceOS':deviceOS});
+      console.log(Datos);
       await fetch(authDeviceURL, {
         method: metodo,
         headers: {
@@ -194,8 +202,11 @@ export default function App({ navigation }) {
         body: JSON.stringify(Datos),
         
       }).then(async(response) => {
-        //console.log(await response.json());
-        if(!response.ok) {      
+        const result = await response.json();
+        console.log(result);
+        //LoginInfo('Llamada de registro de device: ','Data: '+JSON.stringify(Datos)+'\n'+JSON.stringify(result)+'\nexpoToken: '+expoToken);
+        
+        if(!await response.ok) {      
           const errMsg = (tipo == "insert") 
             ? "No se ha podido registrar el dispositivo, no se recibirán notificaciones. Debe volver a iniciar sesión." 
             : "No se ha podido desvincular el dispositivo, seguirá recibiendo notificaciones.";
@@ -253,15 +264,16 @@ export default function App({ navigation }) {
                   Roles: rol,
                 });                
               }  
-              SecureStore.setItemAsync("token", token);              
-              authDevice("insert",token);
+              SecureStore.setItemAsync("token", token);             
+              
               var loginData = {
                 "mensaje":"Autenticado correctamente",
                 /*"token":token,*/
                 /*Token no se debe guardar en asyncstorage sino en secure storage*/
                 "rol":rol
               };
-              AsyncStorage.setItem("authData",JSON.stringify(loginData))
+              AsyncStorage.setItem("authData",JSON.stringify(loginData));
+              authDevice("insert",token);
               setshow(false);   
             });
           } else {

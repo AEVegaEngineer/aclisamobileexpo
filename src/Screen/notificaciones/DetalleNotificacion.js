@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import * as WebBrowser from 'expo-web-browser';
+//import * as Linking from 'expo-linking';
 import * as SecureStore from "expo-secure-store";
 import {
   Card,
@@ -32,17 +33,14 @@ const DetalleNotificacion = ({ navigation }) => {
   const getNotificacion = async () => {
     var notif = await AsyncStorage.getItem('NotifSeleccionada');
     notif = JSON.parse(notif);
-    //console.log(notif)
+    //console.log(notif);
     SetItem(notif[0]);
     if(notif[0].estado === false){
       //console.log("la notif no ha sido leida")
       marcarMensaje(notif[0].id,"true");
     }    
   }
-
-  const redirigirAsync = async () => {
-    await WebBrowser.openBrowserAsync(item.link);
-  };
+  
 
   const marcarMensaje = async(id,estado) => {
     const token = await SecureStore.getItemAsync("token");
@@ -80,19 +78,32 @@ const DetalleNotificacion = ({ navigation }) => {
     await marcarMensaje(obj.itemid,"false");
     navigation.navigate("ListaNotificaciones2");
   }
+  
+  const redirigirAsync = async (obj) => {
+    //console.log("abriendo link "+obj.itemlink);
+    await WebBrowser.openBrowserAsync(obj.itemlink);
+  };
+  /*
+  _handlePress = () => {
+    Linking.openURL(this.props.href);
+    this.props.onPress && this.props.onPress();
+  };
+  */
 
-  const CardFooter = ( itemid, fhcreacion, fhenvio ) => (
+  const CardFooter = ( itemid, fhcreacion, fhenvio, itemlink ) => (
     
     <View style={styles.footerContainer}>     
       <View style={styles.footerMarkup}>
         <Text style={styles.detalleFecha}>Fecha de creación del mensaje: {moment(fhcreacion).format('MMMM Do YYYY, h:mm:ss a')}</Text>
         <Text style={styles.detalleFecha}>Fecha de último envío: {moment(fhenvio).format('MMMM Do YYYY, h:mm:ss a')}</Text>
       </View> 
-      
-      <TouchableOpacity style={{backgroundColor:'#343a40', padding:15, borderRadius:10, marginTop:10, width:'100%'}} activeOpacity={0.6} onPress={() => redirigirAsync()}>
-          <Text style={{color:'#fff', textAlign:'center'}}>Más información</Text>          
+      {(item.link == '') ? null : 
+      <TouchableOpacity style={{backgroundColor:'#343a40', padding:15, borderRadius:10, marginTop:10, width:'100%'}} activeOpacity={0.6} onPress={() => redirigirAsync(itemid)}>
+      <Text style={{color:'#fff', textAlign:'center'}}>Más información</Text>          
       </TouchableOpacity>
-      <TouchableOpacity style={{backgroundColor:'#212529', padding:15, borderRadius:10, marginTop:10, width:'100%'}} activeOpacity={0.6} onPress={() => marcarComoNoLeido(itemid)}>
+      }
+      
+      <TouchableOpacity style={{backgroundColor:'#212529', padding:15, borderRadius:10, marginTop:10, width:'100%'}} activeOpacity={0.6} onPress={() => marcarComoNoLeido(itemlink)}>
           <Text style={{color:'#fff', textAlign:'center'}}>Marcar como no leído</Text>          
       </TouchableOpacity>
     </View>
@@ -120,6 +131,7 @@ const DetalleNotificacion = ({ navigation }) => {
           fhcreacion={item.f_hs_creado} 
           fhenvio={item.f_hs_ultimo_envio}
           itemid={item.id}
+          itemlink={item.link}
           >
           </CardFooter>
 

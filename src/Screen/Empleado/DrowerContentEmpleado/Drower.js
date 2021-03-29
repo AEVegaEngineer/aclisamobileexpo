@@ -48,7 +48,7 @@ export function DrawcontentEmpleado(props) {
                          <DrawerItem
                             icon={({ color, size }) => (
                                 <Icon
-                                    name="account-outline"
+                                    name="ios-list"
                                     color={color}
                                     size={size}
                                 />

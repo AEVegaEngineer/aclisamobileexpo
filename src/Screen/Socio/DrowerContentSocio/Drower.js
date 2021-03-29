@@ -5,9 +5,9 @@ import {
     DrawerItem
 } from '@react-navigation/drawer'
 import {
-    Text, Avatar, Title, Caption, Paragraph, Drawer, TouchableRipple, Switch, useTheme
+    Text, Title, Drawer, useTheme
 } from 'react-native-paper'
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Ionicons } from '@expo/vector-icons'; 
 import { AuthContext } from '../../../../Component/context'
 import { useStateIfMounted } from "use-state-if-mounted";
 import {VersionActual} from '../../Global/Versionado'
@@ -46,12 +46,9 @@ export function DrawcontentSocio(props) {
                        
 
                          <DrawerItem
+                            
                             icon={({ color, size }) => (
-                                <Icon
-                                    name="ballot-outline"
-                                    color={color}
-                                    size={size}
-                                />
+                                <Ionicons name="ios-list" size={size} color={color} />                            
                             )}
                             label="Lista de Notificaciones"
                             onPress={() => { props.navigation.navigate('ListaNotificaciones2') }}
@@ -97,14 +94,10 @@ export function DrawcontentSocio(props) {
             </DrawerContentScrollView>
             <Drawer.Section style={styles.bottomDrawerSection}>
                 <DrawerItem
-                    icon={({ color, size }) => (
-                        <Icon
-                            name="exit-to-app"
-                            color={color}
-                            size={size}
-                        />
+                    icon={({ color, size }) => (                        
+                        <Ionicons name="ios-exit" size={size} color={color} />
                     )}
-                    label="Salir"
+                    label="Cerrar Sesión"
                     onPress={() => { signOut() }}
                 />
             </Drawer.Section>

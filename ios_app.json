@@ -6,19 +6,18 @@
     "orientation": "portrait",
     "name": "Aclisa",
     "slug": "aclisa",
-    "scheme": "aclisa",
+    "scheme": "mycoolredirect",
     "privacy": "unlisted",
     "splash": {
       "image": "./assets/iphoneSplash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "version": "1.0.6",
+    "version": "1.0.3",
     "ios": {
-      "icon": "./assets/icon.png",
       "requireFullScreen": true,
       "bundleIdentifier": "com.aclisa.Aclisa",
-      "buildNumber": "1"
+      "buildNumber": "1.0.3"
     },
     "android": {
       "package": "com.aclisa.Aclisa",
@@ -29,12 +28,11 @@
         }
       },
       "useNextNotificationsApi": true,
-      "versionCode": 7,
-      "permissions" : ["NOTIFICATIONS","VIBRATE"],
-      "icon": "./assets/iconNotifs.png"
+      "versionCode": 4,
+      "permissions" : ["NOTIFICATIONS","VIBRATE"]
     },
     "notification":{
-      "icon":"./assets/iconNotifs.png",
+      "icon":"./assets/whiteicon.png",
       "color": "#00acc1",
       "iosDisplayInForeground": true,
       "androidMode": "collapse",
