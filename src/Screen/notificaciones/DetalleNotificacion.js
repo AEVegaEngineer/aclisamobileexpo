@@ -103,7 +103,7 @@ const DetalleNotificacion = ({ navigation }) => {
       </TouchableOpacity>
       }
       
-      <TouchableOpacity style={{backgroundColor:'#212529', padding:15, borderRadius:10, marginTop:10, width:'100%'}} activeOpacity={0.6} onPress={() => marcarComoNoLeido(itemlink)}>
+      <TouchableOpacity style={{backgroundColor:'#212529', padding:15, borderRadius:10, marginTop:10, width:'100%'}} activeOpacity={0.6} onPress={() => marcarComoNoLeido(itemid)}>
           <Text style={{color:'#fff', textAlign:'center'}}>Marcar como no leído</Text>          
       </TouchableOpacity>
     </View>

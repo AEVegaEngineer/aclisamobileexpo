@@ -18,7 +18,7 @@
       "icon": "./assets/icon.png",
       "requireFullScreen": true,
       "bundleIdentifier": "com.aclisa.Aclisa",
-      "buildNumber": "1"
+      "buildNumber": "2"
     },
     "android": {
       "package": "com.aclisa.Aclisa",
@@ -29,7 +29,7 @@
         }
       },
       "useNextNotificationsApi": true,
-      "versionCode": 7,
+      "versionCode": 8,
       "permissions" : ["NOTIFICATIONS","VIBRATE"],
       "icon": "./assets/iconNotifs.png"
     },
