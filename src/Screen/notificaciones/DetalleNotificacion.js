@@ -4,10 +4,11 @@ import {
   StyleSheet,
   View,
   AsyncStorage,
-  ScrollView 
+  ScrollView,
+  Linking
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import * as WebBrowser from 'expo-web-browser';
+//import * as WebBrowser from 'expo-web-browser';
 //import * as Linking from 'expo-linking';
 import * as SecureStore from "expo-secure-store";
 import {
@@ -81,7 +82,8 @@ const DetalleNotificacion = ({ navigation }) => {
   
   const redirigirAsync = async (obj) => {
     //console.log("abriendo link "+obj.itemlink);
-    await WebBrowser.openBrowserAsync(obj.itemlink);
+    //await WebBrowser.openBrowserAsync(obj.itemlink);
+    Linking.openURL(obj.itemlink)
   };
   /*
   _handlePress = () => {

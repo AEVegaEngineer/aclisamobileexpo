@@ -13,12 +13,12 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "version": "1.0.6",
+    "version": "1.0.7",
     "ios": {
       "icon": "./assets/icon.png",
       "requireFullScreen": true,
       "bundleIdentifier": "com.aclisa.Aclisa",
-      "buildNumber": "2"
+      "buildNumber": "1"
     },
     "android": {
       "package": "com.aclisa.Aclisa",
@@ -29,7 +29,7 @@
         }
       },
       "useNextNotificationsApi": true,
-      "versionCode": 8,
+      "versionCode": 9,
       "permissions" : ["NOTIFICATIONS","VIBRATE"],
       "icon": "./assets/iconNotifs.png"
     },
