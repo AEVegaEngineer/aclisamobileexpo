@@ -37,10 +37,10 @@ export default function ForgotPassword(props) {
             } }] : null,
           { cancelable: true }
         );
-      }
+    }
 
     const enviarEmail = (email) => {
-        const recoveryEndpoint = "https://aclisasj.com.ar:8055/security/users/resetPassword";
+        const recoveryEndpoint = "http://66.97.39.24:8044/security/users/resetPassword";
         const cuerpo = JSON.stringify({
             'username':email
           });

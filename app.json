@@ -13,7 +13,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "version": "1.0.7",
+    "version": "1.0.10",
     "ios": {
       "icon": "./assets/icon.png",
       "requireFullScreen": true,
@@ -29,7 +29,7 @@
         }
       },
       "useNextNotificationsApi": true,
-      "versionCode": 9,
+      "versionCode": 12,
       "permissions" : ["NOTIFICATIONS","VIBRATE"],
       "icon": "./assets/iconNotifs.png"
     },
@@ -41,7 +41,7 @@
       "androidCollapsedTitle": "Nuevas notificaciones"
     },
     "updates": {
-      "enabled": true,
+      "enabled": false,
       "checkAutomatically": "ON_LOAD"
     },
     "assetBundlePatterns": ["assets/*"]

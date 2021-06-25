@@ -51,8 +51,6 @@ const ListaNotificaciones = ({ navigation }) => {
     return unsubscribe;
   }, [navigation]);
   
-  
-  
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
@@ -68,7 +66,7 @@ const ListaNotificaciones = ({ navigation }) => {
    
   const getNotificaciones = async() => {
     const token = await SecureStore.getItemAsync("token");
-    //console.log(token);
+    //alert("token: "+token+ ", typeof: "+typeof token);
     var getNotificacionesEndpoint = "http://66.97.39.24:8044/mensajes/msjCuerpo/getAllByUserDestino";
     //console.log("getNotificaciones")
     fetch(getNotificacionesEndpoint, {

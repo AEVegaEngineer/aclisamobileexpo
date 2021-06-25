@@ -67,9 +67,11 @@ export const StackEmpleado = ({ navigation }) => (
       <Stack.Screen
         name="DetalleNotificacion"
       component={DetalleNotificacion}
-      screenOptions={{ headerShown: true }}
+      screenOptions={{ headerShown: false }}
       options={{
-          headerTitle:"Detalle de la Notificación"
+          headerTitle:"Detalle de la asd",
+          headerBackTitle:"Atrás",
+          headerBackTitleVisible: false
         }}
       />
     
@@ -106,7 +108,8 @@ export const StackSocio = ({ navigation }) => (
       component={DetalleNotificacion}
       screenOptions={{ headerShown: true }}
       options={{
-        headerTitle:"Detalle de la Notificación"
+        headerTitle:"Detalle de la Notificación",
+        headerBackTitle:"Atrás"
       }}
     />    
   </Stack.Navigator>

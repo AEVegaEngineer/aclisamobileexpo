@@ -130,50 +130,14 @@ export default function App({ navigation }) {
   
   
   const AutologinByToken = async() => {
-
+    //console.log("ejecutando autologinbytoken")
     const tokenAlmacenado = await SecureStore.getItemAsync("token");
     if (tokenAlmacenado != null) {
       dispatch({
         type: "SIGN_IN",
         token: tokenAlmacenado,
         Roles: "SOCIO",
-      });
-      //console.log("debe logear automáticamente, el token esta seteado");
-      //props.navigation && props.navigation.navigate("ListaNotificaciones2");
-      /*
-      await fetch("http://serviciosweb.colegiomedico.org.ar:3000/autenticarByToken", {
-        method: "GET",
-        headers: new Headers({
-          Authorization: "Bearer " + tokenAlmacenado,
-          "Content-Type": "application/json",
-        }),
-      }).then((response) => {
-        return response.ok
-          ? response.json()
-          : Promise.reject("Error en la conexión");
-      }).then((data) => {
-        console.log(data.mensaje)
-        AsyncStorage.setItem("authData", JSON.stringify(data))
-          if(data.rol =="empleado") {
-              dispatch({
-                type: "SIGN_IN",
-                token: tokenAlmacenado,
-                Roles: "EMPLEADO",
-              })
-            }
-            else {
-                dispatch({
-                type: "SIGN_IN",
-                token: tokenAlmacenado,
-                Roles: "SOCIO",
-              });
-            }  
-      }).catch((error) => {
-            console.log(error)
-            setshow(false)
-            LoginAlert("Tenemos problemas al comunicarnos con Colegio Médico")
-      });
-      */
+      });      
     }    
   } 
   const authDevice = async( tipo, token ) => { 
@@ -282,7 +246,7 @@ export default function App({ navigation }) {
           }
         }).catch((error) => {
           console.log(error)
-            setshow(false)
+          setshow(false)
           LoginAlert("Tenemos problemas al comunicarnos con ACLISA")
         })
         /*
