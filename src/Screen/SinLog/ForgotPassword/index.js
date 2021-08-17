@@ -40,7 +40,7 @@ export default function ForgotPassword(props) {
     }
 
     const enviarEmail = (email) => {
-        const recoveryEndpoint = "http://66.97.39.24:8044/security/users/resetPassword";
+        const recoveryEndpoint = "http://aclisasj.com.ar:8044/security/users/resetPassword";
         const cuerpo = JSON.stringify({
             'username':email
           });
@@ -48,6 +48,7 @@ export default function ForgotPassword(props) {
           method: "POST",
           headers: new Headers({
             "Content-Type": "application/json",
+            "User-Agent": "Mobile"
           }),
           body:cuerpo
         })

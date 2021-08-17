@@ -45,6 +45,7 @@ export const DataNotificaciones = () => {
       headers: new Headers({
         Authorization: "Bearer " + AuthObject.token,
         "Content-Type": "application/json",
+        "User-Agent": "Mobile"
       }),
     })
     .then((response) => {

@@ -146,7 +146,7 @@ export default function App({ navigation }) {
     if(expoToken != "simulador") {
 
       const endpoint = (tipo == "insert") ? "insert/mine" : "delete/my";
-      const authDeviceURL = "http://66.97.39.24:8044/mensajes/device/"+endpoint;
+      const authDeviceURL = "http://aclisasj.com.ar:8044/mensajes/device/"+endpoint;
       const deviceOS = (Platform.OS === "android") ? "android" : "iOS";
       const Datos = { "deviceId" : expoToken };
       if(tipo == "insert")
@@ -162,6 +162,7 @@ export default function App({ navigation }) {
           "Authorization": token,
           Accept: "application/json",
           "Content-Type": "application/json",
+          "User-Agent": "Mobile"
         },
         body: JSON.stringify(Datos),
         
@@ -196,11 +197,12 @@ export default function App({ navigation }) {
           password: data.password.toLowerCase(),
         };
         // props.navigation && props.navigation.goBack();
-        await fetch("http://66.97.39.24:8044/login", {
+        await fetch("http://aclisasj.com.ar:8044/login", {
           method: "POST",
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
+            "User-Agent": "Mobile"
           },
           body: JSON.stringify(Datos),
         }).then(function(response) {
@@ -344,6 +346,7 @@ export default function App({ navigation }) {
         Accept: "application/json",
         "Accept-encoding": "gzip, deflate",
         "Content-Type": "application/json",
+        "User-Agent": "Mobile"
       },
       body: JSON.stringify(message),
     });

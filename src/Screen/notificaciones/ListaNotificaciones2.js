@@ -5,15 +5,17 @@ import {
   View,
   FlatList,
   AsyncStorage,
-  AppState
+  AppState,
+  Alert
 } from "react-native";
 import {
   Card,
   Text,
 } from "@ui-kitten/components";
+import { AuthContext } from '../../../Component/context'
 import * as SecureStore from "expo-secure-store";
 import { TouchableOpacity } from "react-native-gesture-handler";
-
+/*
 function testJSON(text) { 
   if (typeof text !== "string") { 
       return false; 
@@ -25,8 +27,10 @@ function testJSON(text) {
       return false; 
   } 
 }
+*/
 const ListaNotificaciones = ({ navigation }) => {
 
+  const { signOut } = React.useContext(AuthContext);
   const [NotifsLeidas, SetNotifsLeidas] = React.useState([]);
   const [NotifsNoLeidas, SetNotifsNoLeidas] = React.useState([]);
   const [updateVal, setUpdateVal] = React.useState(false);
@@ -63,25 +67,53 @@ const ListaNotificaciones = ({ navigation }) => {
       ),
     });
   }, [navigation]);
-   
+  const showAlert = () =>
+    Alert.alert(
+      "Error de Seguridad",
+      "Por motivos de seguridad, es necesario que vuelva a iniciar sesión en la aplicación",
+      [
+        {
+          text: "Volver a inciar sesión",
+          onPress: () => signOut(),
+          style: "cancel",
+        },
+      ],
+      {
+        cancelable: false,
+        /*
+        onDismiss: () =>
+          Alert.alert(
+            "This alert was dismissed by tapping outside of the alert dialog."
+          ),
+        */
+      }
+  );
   const getNotificaciones = async() => {
-    const token = await SecureStore.getItemAsync("token");
-    //alert("token: "+token+ ", typeof: "+typeof token);
-    var getNotificacionesEndpoint = "http://66.97.39.24:8044/mensajes/msjCuerpo/getAllByUserDestino";
     //console.log("getNotificaciones")
+    const token = await SecureStore.getItemAsync("token");
+    //lert("token: "+token+ ", typeof: "+typeof token);
+    console.log(token)
+    var getNotificacionesEndpoint = "http://aclisasj.com.ar:8044/mensajes/msjCuerpo/getAllByUserDestino";
+    
     fetch(getNotificacionesEndpoint, {
       method: "GET",
       headers: {
-        "Authorization": token
+        "Authorization": token,
+        "User-Agent": "Mobile"
       }
     })
-    .then((response) => 
-      {
-        //return (testJSON(response.text())) ? response.json() : {}
-        return response.json()
-      })
-    .then((responseData) => { // responseData = undefined  
-
+    .then((response) => {return response.json()})
+    .then((responseData) => {
+      console.log(responseData);
+      //if (responseData.Map.error !== undefined){
+      // esta verificacion no funciona porque rompe al hacer la desestructuracion del map ya que
+      // las propiedades no existen en una respuesta exitosa
+      
+      //Verificar por Map funciona siempre y cuando no se modifique el objeto que retorna el error
+      if("Map" in responseData){
+        console.log("error found");
+        showAlert();
+      }
       const notif = responseData.Respuesta.data.msjCuerpos;
       //ordena por estados
       const noleidos = notif.filter(function filtrarEstado(notif) {
@@ -96,7 +128,8 @@ const ListaNotificaciones = ({ navigation }) => {
       SetNotifsNoLeidas(noleidos);
     })
     .catch(function(err) {
-        console.log(err);
+      console.log("Error ha salido por el catch, seguramente la api esta retornando vacio, verificar via postman");
+      console.log(err);
     })
   }
   /*

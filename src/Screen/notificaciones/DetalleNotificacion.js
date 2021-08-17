@@ -45,13 +45,14 @@ const DetalleNotificacion = ({ navigation }) => {
 
   const marcarMensaje = async(id,estado) => {
     const token = await SecureStore.getItemAsync("token");
-    var marcarNotificacionesEndpoint = "http://66.97.39.24:8044/mensajes/msjCuerpo/changeEstado/"+id+"/"+estado;
+    var marcarNotificacionesEndpoint = "http://aclisasj.com.ar:8044/mensajes/msjCuerpo/changeEstado/"+id+"/"+estado;
     //console.log(marcarNotificacionesEndpoint);
     //console.log(token)
     fetch(marcarNotificacionesEndpoint, {
       method: "PUT",
       headers: {
-        "Authorization": token
+        "Authorization": token,
+        "User-Agent": "Mobile"
       }
     })
     .then((response) => { return response.json() })
