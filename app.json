@@ -33,13 +33,16 @@
       "permissions" : ["NOTIFICATIONS","VIBRATE"],
       "icon": "./assets/iconNotifs.png"
     },
-    "notification":{
-      "icon":"./assets/iconNotifs.png",
-      "color": "#00acc1",
-      "iosDisplayInForeground": true,
-      "androidMode": "collapse",
-      "androidCollapsedTitle": "Nuevas notificaciones"
-    },
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon":"./assets/iconNotifs.png",
+          "color": "#00acc1",          
+          "mode": "production"
+        }
+      ]      
+    ],
     "updates": {
       "enabled": false,
       "checkAutomatically": "ON_LOAD"

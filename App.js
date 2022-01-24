@@ -155,7 +155,16 @@ export default function App({ navigation }) {
       //console.log(authDeviceURL);
       //console.log("Authorization: "+token);      
       //console.log({'deviceOS':deviceOS});
+      console.log("*************Datos enviados para registrar device");
       console.log(Datos);
+      console.log('Headers:');
+      console.log({
+        "Authorization": token,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "User-Agent": "Mobile"
+      })
+      console.log("*************");
       await fetch(authDeviceURL, {
         method: metodo,
         headers: {
@@ -168,7 +177,9 @@ export default function App({ navigation }) {
         
       }).then(async(response) => {
         const result = await response.json();
-        console.log(result);
+        const data = await result;
+        console.log("response:");
+        console.log(data);
         //LoginInfo('Llamada de registro de device: ','Data: '+JSON.stringify(Datos)+'\n'+JSON.stringify(result)+'\nexpoToken: '+expoToken);
         
         if(!await response.ok) {      
@@ -181,6 +192,7 @@ export default function App({ navigation }) {
           console.log(successMsg);
         } */
       }).catch((error) => {
+        console.log("error en el catch de authDevice")
         console.log(error)
         LoginAlert(error);
       })
@@ -208,7 +220,7 @@ export default function App({ navigation }) {
         }).then(function(response) {
           //console.log("retorna del login");
           if(response.ok) {      
-            //console.log("login OK");
+            console.log("login OK");
             var token = response.headers.map.authorization;            
             response.json().then((responseData) => {
               //console.log(token);
@@ -355,14 +367,10 @@ export default function App({ navigation }) {
   async function registerForPushNotificationsAsync() {
     let token;
     if (Constants.isDevice) {
-      const { status: existingStatus } = await Permissions.getAsync(
-        Permissions.NOTIFICATIONS
-      );
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
       let finalStatus = existingStatus;
       if (existingStatus !== "granted") {
-        const { status } = await Permissions.askAsync(
-          Permissions.NOTIFICATIONS
-        );
+        const { status } = await Notifications.requestPermissionsAsync();
         finalStatus = status;
       }
       if (finalStatus !== "granted") {
