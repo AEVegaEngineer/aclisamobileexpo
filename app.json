@@ -1,6 +1,19 @@
 {
   "name": "Aclisa",
   "displayName": "Aclisa",
+  "android": {
+    "package": "com.aclisa.Aclisa",
+    "googleServicesFile": "./google-services.json",
+    "config": {
+      "googleSignIn": {
+        "apiKey": "AIzaSyCuFc3N-2NBg-i4RGQMTXZbCpO3y5q5mnY"
+      }
+    },
+    "useNextNotificationsApi": true,
+    "versionCode": 11,
+    "permissions" : ["NOTIFICATIONS","VIBRATE"],
+    "icon": "./assets/iconNotifs.png"
+  },
   "expo": {
     "icon": "./assets/icon.png",
     "orientation": "portrait",
@@ -33,13 +46,16 @@
       "permissions" : ["NOTIFICATIONS","VIBRATE"],
       "icon": "./assets/iconNotifs.png"
     },
-    "notification":{
-      "icon":"./assets/iconNotifs.png",
-      "color": "#00acc1",
-      "iosDisplayInForeground": true,
-      "androidMode": "collapse",
-      "androidCollapsedTitle": "Nuevas notificaciones"
-    },
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon":"./assets/iconNotifs.png",
+          "color": "#00acc1",          
+          "mode": "production"
+        }
+      ]      
+    ],
     "updates": {
       "enabled": false,
       "checkAutomatically": "ON_LOAD"

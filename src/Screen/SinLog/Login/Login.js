@@ -54,7 +54,7 @@ export default function Login(props) {
             status="control"
             placeholder="Contraseña"
             //icon={passwordVisible ? EyeIcon : EyeOffIcon}
-            accessoryLeft={()=>(<Ionicons name="md-lock" size={24} color={'white'} />)}
+            accessoryLeft={()=>(<Ionicons name="md-lock-closed" size={24} color={'white'} />)}
             /*
             accessoryRight={()=>(passwordVisible ?
             <Ionicons name="md-eye-off" size={24} color={'white'} />

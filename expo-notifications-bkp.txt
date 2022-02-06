@@ -1,0 +1,3 @@
+          "iosDisplayInForeground": true,
+          "androidMode": "collapse",
+          "androidCollapsedTitle": "Nuevas notificaciones",

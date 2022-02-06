@@ -67,7 +67,7 @@ const ListaNotificaciones = ({ navigation }) => {
       ),
     });
   }, [navigation]);
-  const showAlert = () =>
+  const mostrarErrorDeSeguridad = () =>
     Alert.alert(
       "Error de Seguridad",
       "Por motivos de seguridad, es necesario que vuelva a iniciar sesión en la aplicación",
@@ -83,7 +83,7 @@ const ListaNotificaciones = ({ navigation }) => {
         /*
         onDismiss: () =>
           Alert.alert(
-            "This alert was dismissed by tapping outside of the alert dialog."
+            "Alerta cerrada presionando fuera del dialogo."
           ),
         */
       }
@@ -92,7 +92,8 @@ const ListaNotificaciones = ({ navigation }) => {
     //console.log("getNotificaciones")
     const token = await SecureStore.getItemAsync("token");
     //lert("token: "+token+ ", typeof: "+typeof token);
-    console.log(token)
+    //console.log("token recibido en getNotificaciones")
+    //console.log(token)
     var getNotificacionesEndpoint = "http://aclisasj.com.ar:8044/mensajes/msjCuerpo/getAllByUserDestino";
     
     fetch(getNotificacionesEndpoint, {
@@ -112,7 +113,7 @@ const ListaNotificaciones = ({ navigation }) => {
       //Verificar por Map funciona siempre y cuando no se modifique el objeto que retorna el error
       if("Map" in responseData){
         console.log("error found");
-        showAlert();
+        mostrarErrorDeSeguridad();
       }
       const notif = responseData.Respuesta.data.msjCuerpos;
       //ordena por estados
@@ -128,7 +129,7 @@ const ListaNotificaciones = ({ navigation }) => {
       SetNotifsNoLeidas(noleidos);
     })
     .catch(function(err) {
-      console.log("Error ha salido por el catch, seguramente la api esta retornando vacio, verificar via postman");
+      console.log("Error ha salido por el catch, seguramente la api esta retornando vacio, verificar via postman (o no se registro correctamente el device)");
       console.log(err);
     })
   }

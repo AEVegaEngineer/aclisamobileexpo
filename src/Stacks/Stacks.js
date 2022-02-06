@@ -1,11 +1,11 @@
 import * as React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import {Image} from 'react-native'
-import ForgotPassword from "../Screen/SinLog/ForgotPassword/index";
-import Land from "../Screen/SinLog/Landing/Landing";
+import ForgotPassword from "../Screen/Auth/ForgotPassword/index";
+import Land from "../Screen/Auth/Landing/Landing";
 import ListaNotificaciones2 from "../Screen/notificaciones/ListaNotificaciones2";
 import DetalleNotificacion from "../Screen/notificaciones/DetalleNotificacion";
-import Login from "../Screen/SinLog/Login/Login";
+import Login from "../Screen/Auth/Login/Login";
 import SplashInicio from "../Screen/Global/Splash";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
