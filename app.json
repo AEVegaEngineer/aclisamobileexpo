@@ -1,6 +1,19 @@
 {
   "name": "Aclisa",
   "displayName": "Aclisa",
+  "android": {
+    "package": "com.aclisa.Aclisa",
+    "googleServicesFile": "./google-services.json",
+    "config": {
+      "googleSignIn": {
+        "apiKey": "AIzaSyCuFc3N-2NBg-i4RGQMTXZbCpO3y5q5mnY"
+      }
+    },
+    "useNextNotificationsApi": true,
+    "versionCode": 11,
+    "permissions" : ["NOTIFICATIONS","VIBRATE"],
+    "icon": "./assets/iconNotifs.png"
+  },
   "expo": {
     "icon": "./assets/icon.png",
     "orientation": "portrait",
