@@ -15,21 +15,18 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import { AuthContext } from "./Component/context";
 import { useStateIfMounted } from "use-state-if-mounted";
 import { stylesGral } from "./Asset/estilos/stylesGral";
-import Constants from "expo-constants";
+
 import * as Notifications from "expo-notifications";
-import * as Permissions from "expo-permissions";
 import * as SecureStore from "expo-secure-store";
 import * as eva from "@eva-design/eva";
 import { ApplicationProvider } from "@ui-kitten/components";
 import { ImageOverlay } from "./src/Screen/Global/extra/image-overlay.component";
+import { NotificationSetUp, registerForPushNotificationsAsync } from "./src/notifications/PushNotifications"
+import { authDevice } from "./src/auth/authDevice";
+import { autologinByToken } from "./src/auth/autologinByToken";
+import { authReducer } from "./src/reducers/authReducer";
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: true,
-    shouldSetBadge: true,
-  }),
-});
+NotificationSetUp();
 
 const Drawer = createDrawerNavigator();
 
@@ -42,15 +39,6 @@ function LoginAlert(msg) {
   );
 }
 
-function LoginInfo(title, msg) {
-  Alert.alert(
-    title,
-    msg,
-    [{ text: "Cerrar", onPress: () => console.log("LoginInfo cerrado") }],
-    { cancelable: true }
-  );
-}
-
 export default function App({ navigation }) {
   //setters y getters para notificaciones
   const [expoPushToken, setExpoPushToken] = useState("");
@@ -58,43 +46,20 @@ export default function App({ navigation }) {
   const notificationListener = useRef();
   const responseListener = useRef();
   const [show, setshow] = useStateIfMounted(false);
+  const initAuthState = {
+    isLoading: true,
+    isSignout: false,
+    userToken: null,
+    UserRoles: null,
+  }
   const [state, dispatch] = React.useReducer(
-    (prevState, action) => {
-      switch (action.type) {
-        case "RESTORE_TOKEN":
-          return {
-            ...prevState,
-            userToken: action.token,
-            isLoading: false,
-            UserRoles: action.Roles,
-          };
-        case "SIGN_IN":
-          return {
-            ...prevState,
-            isSignout: false,
-            userToken: action.Roles,
-            UserRoles: action.Roles,
-          };
-        case "SIGN_OUT":
-          return {
-            ...prevState,
-            isSignout: true,
-            userToken: null,
-            UserRoles: null,
-          };
-      }
-    },
-    {
-      isLoading: true,
-      isSignout: false,
-      userToken: null,
-      UserRoles: null,
-    }
+    authReducer,
+    initAuthState
   );
 
   React.useEffect(() => {
     // setshow(true);
-    AutologinByToken();
+    autologinByToken(dispatch);
     // notificaciones
     registerForPushNotificationsAsync().then((token) =>
       {
@@ -123,81 +88,8 @@ export default function App({ navigation }) {
     return () => {
       Notifications.removeNotificationSubscription(notificationListener);
       Notifications.removeNotificationSubscription(responseListener);
-    };
-
-    
+    };    
   }, []);
-  
-  
-  const AutologinByToken = async() => {
-    //console.log("ejecutando autologinbytoken")
-    const tokenAlmacenado = await SecureStore.getItemAsync("token");
-    if (tokenAlmacenado != null) {
-      dispatch({
-        type: "SIGN_IN",
-        token: tokenAlmacenado,
-        Roles: "SOCIO",
-      });      
-    }    
-  } 
-  const authDevice = async( tipo, token ) => { 
-    
-    const expoToken = await SecureStore.getItemAsync("ExpoToken"); //(!t === undefined && t != "") ? t : "simulador";
-    if(expoToken != "simulador") {
-
-      const endpoint = (tipo == "insert") ? "insert/mine" : "delete/my";
-      const authDeviceURL = "http://aclisasj.com.ar:8044/mensajes/device/"+endpoint;
-      const deviceOS = (Platform.OS === "android") ? "android" : "iOS";
-      const Datos = { "deviceId" : expoToken };
-      if(tipo == "insert")
-        Datos["deviceName"] = deviceOS;
-      const metodo = (tipo == "insert") ? "POST" : "DELETE";
-      //console.log(authDeviceURL);
-      //console.log("Authorization: "+token);      
-      //console.log({'deviceOS':deviceOS});
-      console.log("*************Datos enviados para registrar device");
-      console.log(Datos);
-      console.log('Headers:');
-      console.log({
-        "Authorization": token,
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        "User-Agent": "Mobile"
-      })
-      console.log("*************");
-      await fetch(authDeviceURL, {
-        method: metodo,
-        headers: {
-          "Authorization": token,
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          "User-Agent": "Mobile"
-        },
-        body: JSON.stringify(Datos),
-        
-      }).then(async(response) => {
-        const result = await response.json();
-        const data = await result;
-        console.log("response:");
-        console.log(data);
-        //LoginInfo('Llamada de registro de device: ','Data: '+JSON.stringify(Datos)+'\n'+JSON.stringify(result)+'\nexpoToken: '+expoToken);
-        
-        if(!await response.ok) {      
-          const errMsg = (tipo == "insert") 
-            ? "No se ha podido registrar el dispositivo, no se recibirán notificaciones. Debe volver a iniciar sesión." 
-            : "No se ha podido desvincular el dispositivo, seguirá recibiendo notificaciones.";
-          throw errMsg;
-        } /*else {
-          const successMsg = (tipo == "insert") ? "Se registró el dispositivo correctamente" : "Se eliminó el dispositivo correctamente";
-          console.log(successMsg);
-        } */
-      }).catch((error) => {
-        console.log("error en el catch de authDevice")
-        console.log(error)
-        LoginAlert(error);
-      })
-    }   
-  }
 
   const authContext = React.useMemo(
     () => ({
@@ -263,32 +155,6 @@ export default function App({ navigation }) {
           setshow(false)
           LoginAlert("Tenemos problemas al comunicarnos con ACLISA")
         })
-        /*
-        .then((responseData) => {
-          console.log(responseData);
-          console.log(response.headers);
-          AsyncStorage.setItem("UserName", responseData.nombreUsuario);
-          if (responseData.token) {
-            if(responseData.permisos[1] =="ROLE_ADMIN") {
-              dispatch({
-                type: "SIGN_IN",
-                token: responseData.token,
-                Roles: "ADMIN",
-              })
-            } else {
-              dispatch({
-                type: "SIGN_IN",
-                token: responseData.token,
-                Roles: "SOCIO",
-              });
-            }         
-            SecureStore.setItemAsync("token", responseData.token)
-            AsyncStorage.setItem("authData",JSON.stringify(responseData))
-            setshow(false);
-          }           
-        })
-        
-        */
       },      
       signOut: async() =>
         {
@@ -341,61 +207,4 @@ export default function App({ navigation }) {
       </AuthContext.Provider>
     </ApplicationProvider>
   );
-
-  // Can use this function below, OR use Expo's Push Notification Tool-> https://expo.io/dashboard/notifications
-  async function sendPushNotification(expoPushToken) {
-    const message = {
-      to: expoPushToken,
-      sound: "default",
-      title: "Original Title",
-      body: "And here is the body!",
-      data: { data: "goes here" },
-    };
-
-    await fetch("https://exp.host/--/api/v2/push/send", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Accept-encoding": "gzip, deflate",
-        "Content-Type": "application/json",
-        "User-Agent": "Mobile"
-      },
-      body: JSON.stringify(message),
-    });
-  }
-
-  async function registerForPushNotificationsAsync() {
-    let token;
-    if (Constants.isDevice) {
-      const { status: existingStatus } = await Notifications.getPermissionsAsync();
-      let finalStatus = existingStatus;
-      if (existingStatus !== "granted") {
-        const { status } = await Notifications.requestPermissionsAsync();
-        finalStatus = status;
-      }
-      if (finalStatus !== "granted") {
-        LoginAlert(
-          "Ha ocurrido un error obteniendo el token push para las notificaciones!"
-        );
-        return;
-      }
-      token = (await Notifications.getExpoPushTokenAsync()).data;
-      //console.log("el token es: " + token);
-    } else {
-      LoginAlert(
-        "Se debe usar un dispositivo físico para recibir Notificaciones Push"
-      );
-    }
-
-    if (Platform.OS === "android") {
-      Notifications.setNotificationChannelAsync("default", {
-        name: "default",
-        importance: Notifications.AndroidImportance.MAX,
-        vibrationPattern: [0, 250, 250, 250],
-        lightColor: "#FF231F7C",
-      });
-    }
-
-    return token;
-  }
 }
